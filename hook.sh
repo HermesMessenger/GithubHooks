@@ -16,7 +16,7 @@ if [ -f projectmaster.zip ]; then
 
     kill -9 `ps -edaf|grep -i "start.sh"|grep -v "grep"|cut -d" " -f4`
     
-    nohup ./Produccion-Social/start.sh > trazas.log &
+    nohup ./Produccion-Social/start.sh &> trazas.log &
     
     echo "Started :)"
 fi
