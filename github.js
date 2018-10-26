@@ -1,5 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser');;
+const bodyParser = require('body-parser');
 const app = express();
 var execFile = require('child_process').execFile;
 app.use(bodyParser.json());
