@@ -5,7 +5,7 @@ var execFile = require('child_process').execFile;
 app.use(bodyParser.json());
 ////
 const port = 3000;
-var repo = 'Codernauts/social-network';
+var repo = 'Codernauts/Hermes';
 var branch = 'master';
 
 app.post('/', function(req, res) {

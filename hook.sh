@@ -1,6 +1,6 @@
 #!/bin/bash
 
-wget -O projectmaster.zip -q https://github.com/Codernauts/social-network/archive/master.zip
+wget -O projectmaster.zip -q https://github.com/Codernauts/Hermes/archive/master.zip
 
 target_dir="Produccion-Social"
 if [ -f projectmaster.zip ]; then
@@ -22,7 +22,7 @@ if [ -f projectmaster.zip ]; then
 
     rm -rf $target_dir
 
-    mv social-network-master Produccion-Social
+    mv Hermes-master Produccion-Social
     
     chmod +x $target_dir/start.sh	
     #nohup ./Produccion-Social/start.sh &> trazas.log &
