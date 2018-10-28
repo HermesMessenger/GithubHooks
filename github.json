@@ -1,0 +1,13 @@
+{
+	"repos": [{
+			"repo": "Codernauts/Hermes",
+			"folder": "Hermes-master",
+			"branch": "master"
+		},
+		{
+			"repo": "Codernauts/Cloudflare-Fetcher",
+			"folder": "Cloudflare",
+			"branch": "master"
+		}
+	]
+}
