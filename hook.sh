@@ -1,34 +1,23 @@
 #!/bin/bash
 
+target_dir="Produccion-Social"
 wget -O projectmaster.zip -q https://github.com/Codernauts/Hermes/archive/master.zip
 
-target_dir="Produccion-Social"
 if [ -f projectmaster.zip ]; then
- 	
-    #check if there is a process running to avoid calling kill without pid
-    total_process=`ps -edaf|grep -i "start.sh"|wc -l`
-    if [ $total_process -gt 1 ];
-    then    
-        numpid=`ps -edaf|grep -i "start.sh"|grep -v "grep"|cut -d" " -f3`
-    
-        echo "Killing process $numpid "   
-        echo "kill -n 9 $numpid"
-    else
-	echo "No processes to kill"
-    fi
-    unzip -q projectmaster.zip
 
+    echo "Stopping server"
+    pm2 stop server
+
+    unzip -q projectmaster.zip
     rm projectmaster.zip
 
     rm -rf $target_dir
 
-    mv Hermes-master Produccion-Social
-    
-    chmod +x $target_dir/start.sh	
-    #nohup ./Produccion-Social/start.sh &> trazas.log &
-    current_dir=`pwd`
+    mv Hermes-master $target_dir
     cd $target_dir
-    #npm install #installing modules
-    nohup ./start.sh > $current_dir/trazas.log & 
+
+    npm install
+    pm2 start server.js
+
     echo "Started :)"
 fi
