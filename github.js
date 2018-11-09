@@ -9,8 +9,9 @@ console.log('-------------------------------')
 app.post('/', function(req, res) {
     console.log("Received POST");
     res.status(200).send('OK');
+    console.log('Updating...')
     execFile("./hook.sh", function(error, stdout, stderr) {
-        console.log('Ejecutado');
+        console.log('Server updated.');
     });
 });
 
