@@ -10,7 +10,7 @@ if [ -f projectmaster.zip ]; then
 
     rm projectmaster.zip
 
-    (cd "Hermes-master; npm i")
+    (cd "Hermes-master"; npm i)
 
     pm2 stop "Hermes Server"
 
