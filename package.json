@@ -1,0 +1,23 @@
+{
+  "name": "github-hooks",
+  "version": "1.0.0",
+  "description": "GithubHooks its a JavaScript script that updates your application and opens (auto-deployment) when a commit comes to the server",
+  "main": "github.js",
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HermesMessenger/GithubHooks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HermesMessenger/GithubHooks/issues"
+  },
+  "homepage": "https://github.com/HermesMessenger/GithubHooks#readme"
+}
