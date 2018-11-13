@@ -21,5 +21,4 @@ if [ -f projectmaster.zip ]; then
     pm2 start "Hermes Server"
 
     echo "Started :)"
-
 fi
