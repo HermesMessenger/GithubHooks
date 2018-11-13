@@ -19,7 +19,7 @@ if [ -f projectmaster.zip ]; then
     rm -rf $target_dir
 
     mv "Hermes-$branch" $target_dir
-    sed -i 's/8080/8081/g' "$target_dir/server.js"
+    sed -i 's/8080/8081/g' "$target_dir/server.js" # Replace port 8080 with 8081 so both servers don't run on the same port
 
     pm2 start "Hermes Server Testing"
 
