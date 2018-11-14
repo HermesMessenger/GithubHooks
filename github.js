@@ -27,22 +27,22 @@ app.post('/', function (req, res) {
             console.log("Received hook in normal branch");
             res.status(200).send('OK');
             console.log('Updating server...')
-            redis.lpush('messages', 'Admin Bot' + SEPCHAR + 'Normal server is updating...' + SEPCHAR + utils.getNow());
+            redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Normal server is updating...' + SEPCHAR + utils.getNow());
             execFile("./hook.sh", function () {
                 console.log('Server updated to commit ' + commitID);
-                redis.lpush('messages', 'Admin Bot' + SEPCHAR + 'Normal server updated to commit #' + commitID + ' by @' + commiterName +' - ' + commitMessage + SEPCHAR + utils.getNow());
-                redis.lpush('messages', 'Admin Bot' + SEPCHAR + 'Please reload the page in order to access the new version.' + SEPCHAR + utils.getNow())
+                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Normal server updated to commit #' + commitID + ' by @' + commiterName +' - ' + commitMessage + SEPCHAR + utils.getNow());
+                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Please reload the page in order to access the new version.' + SEPCHAR + utils.getNow())
             });
 
         } else if (branch == 'testing') {
             console.log("Received hook in testing branch");
             res.status(200).send('OK');
             console.log('Updating testing server...')
-            redis.lpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server is updating...' + SEPCHAR + utils.getNow());
+            redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server is updating...' + SEPCHAR + utils.getNow());
             execFile("./hook-testing.sh", function () {
                 console.log('Testing server updated to commit ' + commitID);
-                redis.lpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server updated to commit #' + commitID + ' by @' + commiterName +' - ' + commitMessage + SEPCHAR + utils.getNow());
-                redis.lpush('messages', 'Admin Bot' + SEPCHAR + 'Please access that page ( https://hermesmessenger-testing.duckdns.org ) in order to see the new version.' + SEPCHAR + utils.getNow())
+                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server updated to commit #' + commitID + ' by @' + commiterName +' - ' + commitMessage + SEPCHAR + utils.getNow());
+                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Please access that page ( https://hermesmessenger-testing.duckdns.org ) in order to see the new version.' + SEPCHAR + utils.getNow())
             });
         } else {
             res.status(304).send('Wrong branch');
