@@ -16,34 +16,43 @@ app.post('/', function (req, res) {
     var json = req.body;
 
     var repo = json.repository.name;
-    var branch = json.ref.split('/').pop();
+    var branch = json.ref.split('/');
     var commitID = (json.head_commit.id).substring(0, 7);
     var commitMessage = (json.head_commit.message).split('\n')[0];
     var commiterName = json.head_commit.author.username;
 
 
     if (repo == 'Hermes') {
-        if (branch == 'master') {
+        if (branch[2] == 'master') {
             console.log("Received hook in normal branch");
             res.status(200).send('OK');
             console.log('Updating server...')
             redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Normal server is updating...' + SEPCHAR + utils.getNow());
             execFile("./hook.sh", function () {
                 console.log('Server updated to commit ' + commitID);
-                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Normal server updated to commit #' + commitID + ' by @' + commiterName +' - ' + commitMessage + SEPCHAR + utils.getNow());
+                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Normal server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage + SEPCHAR + utils.getNow());
                 redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Please reload the page in order to access the new version.' + SEPCHAR + utils.getNow())
             });
 
-        } else if (branch == 'testing') {
+        } else if (branch[2] == 'testing') {
             console.log("Received hook in testing branch");
             res.status(200).send('OK');
             console.log('Updating testing server...')
             redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server is updating...' + SEPCHAR + utils.getNow());
             execFile("./hook-testing.sh", function () {
                 console.log('Testing server updated to commit ' + commitID);
-                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server updated to commit #' + commitID + ' by @' + commiterName +' - ' + commitMessage + SEPCHAR + utils.getNow());
-                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Please access that page ( https://hermesmessenger-testing.duckdns.org ) in order to see the new version.' + SEPCHAR + utils.getNow())
+                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage + SEPCHAR + utils.getNow());
+                redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Please access that page (https://hermesmessenger-testing.duckdns.org) in order to see the new version.' + SEPCHAR + utils.getNow())
             });
+
+        } else if (branch[1] == 'tags') {
+            res.status(200).send('OK');
+            console.log('New release: ' + branch[2]);
+            redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
+            redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
+            redis.rpush('messages', 'Admin Bot' + SEPCHAR + '  New version of the website released (' + branch[2] + ')!' + SEPCHAR + utils.getNow())
+            redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
+            redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
         } else {
             res.status(304).send('Wrong branch');
         };
