@@ -14,18 +14,17 @@ console.log('---------------------------------------------')
 app.post('/', function (req, res) {
 
   var json = req.body;
+  var event = req.header('X-GitHub-Event');
 
-  var repo = json.repository.name;
-  var branch = json.ref.split('/');
-  var commitID = (json.head_commit.id).substring(0, 7);
-  var commitMessage = (json.head_commit.message).split('\n')[0];
-  var commiterName = json.head_commit.author.username;
+  if (event == 'push') {
 
+    var repo = json.repository.name;
+    var branch = json.ref.split('/');
+    var commitID = (json.head_commit.id).substring(0, 7);
+    var commitMessage = (json.head_commit.message).split('\n')[0];
+    var commiterName = json.head_commit.author.username;
 
-  if (repo == 'Hermes') {
-
-    if (branch[1] == 'heads') { // New commit
-
+    if (repo == 'Hermes') {
       if (branch[2] == 'master') { // To master branch
         console.log("Received hook in normal branch");
         res.status(200).send('OK');
@@ -46,23 +45,23 @@ app.post('/', function (req, res) {
           redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage + SEPCHAR + utils.getNow());
         });
 
-      } else {
-        res.status(403).send('Wrong branch'); // Forbidden
-      };
+      } else res.status(403).send('Wrong branch'); // Forbidden
+    } else res.status(403).send('Wrong repo'); // Forbidden
 
-    } else if (branch[1] == 'tags') { // New release
-      res.status(200).send('OK');
-      console.log('New release: ' + branch[2]);
-      redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
-      redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
-      redis.rpush('messages', 'Admin Bot' + SEPCHAR + '  New version of the website released (' + branch[2] + ')!' + SEPCHAR + utils.getNow())
-      redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
-      redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
-    };
+  } else if (event == 'release') {
 
-  } else {
-    res.status(403).send('Wrong repo'); // Forbidden
-  }
+    var version = json.release.tag_name;
+    var releaseInfo = (json.release.name).substring(9);
+
+    res.status(200).send('OK');
+    console.log('New release: ' + version);
+    redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
+    redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
+    redis.rpush('messages', 'Admin Bot' + SEPCHAR + '  New version of the website released (' + version + ')!' + SEPCHAR + utils.getNow())
+    redis.rpush('messages', 'Admin Bot' + SEPCHAR + '  Release description - ' + releaseInfo + SEPCHAR + utils.getNow())
+    redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
+    redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
+  };
 });
 
 app.listen(port, () => console.log('Running GitHub Webhooks on port ' + port + '.'))
