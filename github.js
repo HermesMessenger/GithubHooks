@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const redis = require("redis").createClient();
+const redis = require("redis").createClient(); //TODO: Use the API (Bots) instead of writing directly into the DB
 const utils = require('./utils');
 const app = express();
 const execFile = require('child_process').execFile;
@@ -27,7 +27,7 @@ app.post('/', function (req, res) {
         if (repo == 'Hermes') {
             if (branch[2] == 'master') { // To master branch
                 console.log("Received hook in normal branch");
-                res.status(200).send('OK');
+                res.status(200).send('Received update in normal server');
                 console.log('Updating server...')
                 execFile("./hook.sh", function () {
                     console.log('Server updated to commit ' + commitID);
@@ -43,15 +43,15 @@ app.post('/', function (req, res) {
                     redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage + SEPCHAR + utils.getNow());
                 });
 
-            } else res.status(403).send('Wrong branch');
-        } else res.status(403).send('Wrong repo');
+            } else res.status(200).send('Not modified: wrong branch');
+        } else res.status(200).send('Not modified: wrong repo');
 
     } else if (event == 'release') {
 
         var version = json.release.tag_name;
         var releaseInfo = (json.release.name).substring(9);
 
-        res.status(200).send('OK');
+        res.status(200).send('Received update in testing server');
         console.log('New release: ' + version);
         redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
         redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
@@ -60,7 +60,7 @@ app.post('/', function (req, res) {
         redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
         redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
 
-    } else res.status(403).send('Wrong event');
+    } else res.status(200).send('Not modified: wrong event');
 });
 
 app.listen(port, () => console.log('Running GitHub Webhooks on port ' + port + '.'))
