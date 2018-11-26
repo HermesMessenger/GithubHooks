@@ -60,7 +60,7 @@ app.post('/', function (req, res) {
         redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
         redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
 
-    } else res.status(200).send('Not modified: wrong event');
+    } else res.status(200).send('Not modified: unimplemented event');
 });
 
 app.listen(port, () => console.log('Running GitHub Webhooks on port ' + port + '.'))
