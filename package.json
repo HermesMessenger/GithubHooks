@@ -1,15 +1,15 @@
 {
   "name": "github-hooks",
   "version": "1.0.0",
-  "description": "GithubHooks its a JavaScript script that updates your application and opens (auto-deployment) when a commit comes to the server",
+  "description": "A JavaScript script that automatically updates the server when a commit is pushed.",
   "main": "github.js",
   "dependencies": {
     "express": "^4.16.4",
-    "redis": "^2.8.0"
+    "hermesbot": "^1.0.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ."
   },
   "repository": {
     "type": "git",

@@ -1,66 +1,74 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const redis = require("redis").createClient(); //TODO: Use the API (Bots) instead of writing directly into the DB
-const utils = require('./utils');
-const app = express();
-const execFile = require('child_process').execFile;
-const port = 3000;
-const SEPCHAR = String.fromCharCode(0x1);
+const app = require('express')
+const bodyParser = require('body-parser')
+const HermesBot = require('hermesbot')
+const execFile = require('child_process').execFile
 
-app.use(bodyParser.json());
+const port = 3000
+
+const BOT_TOKEN = "44a8f200-15d9-11e9-9698-351fa8b8a04e"
+
+app.use(bodyParser.json())
+
+const bot = new HermesBot(BOT_TOKEN, {
+    HermesURL: 'https://hermesmessenger-testing.duckdns.org',
+    PollingRate: 500
+})
 
 console.log('---------------------------------------------')
 
 app.post('/', function (req, res) {
 
-    var json = req.body;
-    var event = req.header('X-GitHub-Event');
+    var json = req.body
+    var event = req.header('X-GitHub-Event')
 
     if (event == 'push') {
 
-        var repo = json.repository.name;
-        var branch = json.ref.split('/');
-        var commitID = (json.head_commit.id).substring(0, 7);
-        var commitMessage = (json.head_commit.message).split('\n')[0];
-        var commiterName = json.head_commit.author.username;
+        var repo = json.repository.name
+        var branch = json.ref.split('/')
+        var commitID = (json.head_commit.id).substring(0, 7)
+        var commitMessage = (json.head_commit.message).split('\n')[0]
+        var commiterName = json.head_commit.author.username
 
         if (repo == 'Hermes') {
             if (branch[2] == 'master') { // To master branch
-                console.log("Received hook in normal branch");
-                res.status(200).send('Received update in normal server');
+                console.log("Received hook in normal branch")
+                res.status(200).send('Received update in normal server')
                 console.log('Updating server...')
                 execFile("./hook.sh", function () {
-                    console.log('Server updated to commit ' + commitID);
-                    redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage + SEPCHAR + utils.getNow());
-                });
+                    console.log('Server updated to commit ' + commitID)
+
+                    bot.sendMessage('general', 'Server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage)
+                })
 
             } else if (branch[2] == 'testing') { // To testing branch
-                console.log("Received hook in testing branch");
-                res.status(200).send('OK');
+                console.log("Received hook in testing branch")
+                res.status(200).send('OK')
                 console.log('Updating testing server...')
                 execFile("./hook-testing.sh", function () {
-                    console.log('Testing server updated to commit ' + commitID);
-                    redis.rpush('messages', 'Admin Bot' + SEPCHAR + 'Testing server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage + SEPCHAR + utils.getNow());
-                });
+                    console.log('Testing server updated to commit ' + commitID)
 
-            } else res.status(200).send('Not modified: wrong branch');
-        } else res.status(200).send('Not modified: wrong repo');
+                    bot.sendMessage('general', 'Testing server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage)
+                })
+
+            } else res.status(200).send('Not modified: wrong branch')
+        } else res.status(200).send('Not modified: wrong repo')
 
     } else if (event == 'release') {
 
-        var version = json.release.tag_name;
-        var releaseInfo = (json.release.name).substring(9);
+        var version = json.release.tag_name
+        var releaseInfo = (json.release.name).substring(9)
 
-        res.status(200).send('Received update in testing server');
-        console.log('New release: ' + version);
-        redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
-        redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
-        redis.rpush('messages', 'Admin Bot' + SEPCHAR + '  New version of the website released (' + version + ')!' + SEPCHAR + utils.getNow())
-        redis.rpush('messages', 'Admin Bot' + SEPCHAR + '  Release description - ' + releaseInfo + SEPCHAR + utils.getNow())
-        redis.rpush('messages', 'Admin Bot' + SEPCHAR + '-----------------------------------------------------' + SEPCHAR + utils.getNow())
-        redis.rpush('messages', 'Admin Bot' + SEPCHAR + ' ' + SEPCHAR + utils.getNow())
+        res.status(200).send('Received update in testing server')
+        console.log('New release: ' + version)
 
-    } else res.status(200).send('Not modified: unimplemented event');
-});
+        bot.sendMessage('general', ' ')
+        bot.sendMessage('general', '-----------------------------------------------------')
+        bot.sendMessage('general', '  New version of the website released (' + version + ')!')
+        bot.sendMessage('general', '  Release description - ' + releaseInfo)
+        bot.sendMessage('general', '-----------------------------------------------------')
+        bot.sendMessage('general', ' ')
 
-app.listen(port, () => console.log('Running GitHub Webhooks on port ' + port + '.'))
+    } else res.status(200).send('Not modified: unimplemented event')
+})
+
+app.listen(port, () => console.log('Running GitHub Webhook on port ' + port + '.'))
