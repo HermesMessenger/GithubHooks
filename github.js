@@ -1,4 +1,4 @@
-const app = require('express')
+const app = require('express')()
 const bodyParser = require('body-parser')
 const HermesBot = require('hermesbot')
 const execFile = require('child_process').execFile
