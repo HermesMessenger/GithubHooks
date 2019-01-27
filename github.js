@@ -5,7 +5,7 @@ const execFile = require('child_process').execFile
 
 const port = 3000
 
-const BOT_TOKEN = "44a8f200-15d9-11e9-9698-351fa8b8a04e"
+const BOT_TOKEN = "2835e6e0-2250-11e9-b809-4914a30edb84"
 
 app.use(bodyParser.json())
 
