@@ -5,7 +5,7 @@ const execFile = require('child_process').execFile
 
 const port = 3000
 
-const BOT_TOKEN = "2835e6e0-2250-11e9-b809-4914a30edb84"
+const BOT_TOKEN = process.env.BOT_UUID
 
 app.use(bodyParser.json())
 

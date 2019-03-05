@@ -14,15 +14,15 @@ if [ -f projectmaster.zip ]; then
 
     (cd "Hermes-$branch"; npm i)
 
-    pm2 stop "Hermes Testing"
+    pm2 stop "Testing"
 
     rm -rf $target_dir
 
     mv "Hermes-$branch" $target_dir
 
-    sed -i 's/8080/8081/g' "$target_dir/server.js" # Replace port 8080 with 8081 so both servers don't run on the same port
+    cp config-testing.json $target_dir/config.json
 
-    pm2 start "Hermes Testing"
+    pm2 start "Testing"
 
     sleep 5
 
