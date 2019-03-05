@@ -26,6 +26,7 @@ app.post('/', function (req, res) {
         var repo = json.repository.name
         var branch = json.ref.split('/')
         var commitID = (json.head_commit.id).substring(0, 7)
+        var commitURL = json.head_commit.url
         var commitMessage = (json.head_commit.message).split('\n')[0]
         var commiterName = json.head_commit.author.username
 
@@ -37,7 +38,7 @@ app.post('/', function (req, res) {
                 execFile("./hook.sh", function () {
                     console.log('Server updated to commit ' + commitID)
 
-                    bot.sendMessage('general', 'Server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage)
+                    bot.sendMessage('general', 'Server updated to commit [#' + commitID + '](' + commitURL + ') by @' + commiterName + ' - ' + commitMessage)
                 })
 
             } else if (branch[2] == 'testing') { // To testing branch
@@ -47,7 +48,7 @@ app.post('/', function (req, res) {
                 execFile("./hook-testing.sh", function () {
                     console.log('Testing server updated to commit ' + commitID)
 
-                    bot.sendMessage('general', 'Testing server updated to commit #' + commitID + ' by @' + commiterName + ' - ' + commitMessage)
+                    bot.sendMessage('general', 'Testing server updated to commit [#' + commitID + '](' + commitURL + ') by @' + commiterName + ' - ' + commitMessage)
                 })
 
             } else res.status(200).send('Not modified: wrong branch')
