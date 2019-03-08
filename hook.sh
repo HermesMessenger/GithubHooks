@@ -19,7 +19,6 @@ if [ -f projectmaster.zip ]; then
     mv Hermes-master $target_dir
 
     cp config.json $target_dir
-    cp assetLinks.json $target_dir/web_client/assetLinks.json
 
     pm2 start "Hermes"
 
