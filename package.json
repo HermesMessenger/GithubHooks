@@ -5,7 +5,7 @@
   "main": "github.js",
   "dependencies": {
     "express": "^4.16.4",
-    "hermesbot": "^1.0.1"
+    "hermesbot": "^1.1.0"
   },
   "devDependencies": {},
   "scripts": {

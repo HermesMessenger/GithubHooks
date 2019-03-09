@@ -10,8 +10,8 @@ const BOT_TOKEN = process.env.BOT_UUID
 app.use(bodyParser.json())
 
 const bot = new HermesBot(BOT_TOKEN, {
-    HermesURL: 'https://hermesmessenger-testing.duckdns.org',
-    PollingRate: 500
+    HermesURL: 'https://testing.hermesmessenger.chat',
+    PollingRate: 5000 // The bot doesn't need polling since it doesn't listen for messages
 })
 
 console.log('---------------------------------------------')
