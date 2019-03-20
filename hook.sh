@@ -10,6 +10,8 @@ if [ -f projectmaster.zip ]; then
 
     rm projectmaster.zip
 
+    cp config.json "Hermes-master"
+
     (cd "Hermes-master"; npm i)
 
     pm2 stop "Hermes"
@@ -17,8 +19,6 @@ if [ -f projectmaster.zip ]; then
     rm -rf $target_dir
 
     mv Hermes-master $target_dir
-
-    cp config.json $target_dir
 
     pm2 start "Hermes"
 

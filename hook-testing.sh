@@ -12,6 +12,8 @@ if [ -f projectmaster.zip ]; then
 
     rm projectmaster.zip
 
+    cp config-testing.json "Hermes-$branch"/config.json
+
     (cd "Hermes-$branch"; npm i)
 
     pm2 stop "Testing"
@@ -19,8 +21,6 @@ if [ -f projectmaster.zip ]; then
     rm -rf $target_dir
 
     mv "Hermes-$branch" $target_dir
-
-    cp config-testing.json $target_dir/config.json
 
     pm2 start "Testing"
 
