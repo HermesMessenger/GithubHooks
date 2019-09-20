@@ -1,5 +1,4 @@
 node_modules
-Produccion-Social
-Produccion-Social-Testing
-config.json
-config-testing.json
+Hermes-*
+Produccion-Social-*
+config-*.json

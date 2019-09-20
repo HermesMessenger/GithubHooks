@@ -1,28 +1,30 @@
 #!/bin/bash
 
-wget -O projectmaster.zip -q https://github.com/Codernauts/Hermes/archive/master.zip
+branch=${1:-"master"}
+target_dir="Produccion-Social-$branch"
 
-target_dir="Produccion-Social"
+wget -O projectmaster.zip -q "https://github.com/Codernauts/Hermes/archive/$branch.zip"
 
-if [ -f projectmaster.zip ]; then
+unzip -q projectmaster.zip &> /dev/null
 
-    unzip -q projectmaster.zip
-
+if [ $? -eq 0 ]; then
     rm projectmaster.zip
 
-    cp config.json "Hermes-master"
+    cp "config-$branch.json" "Hermes-$branch"/config.json
 
-    (cd "Hermes-master"; npm i)
+    (cd "Hermes-$branch"; npm i)
 
-    pm2 stop "Hermes"
+    pm2 stop "$branch"
 
     rm -rf $target_dir
 
-    mv Hermes-master $target_dir
+    mv "Hermes-$branch" $target_dir
 
-    pm2 start "Hermes"
+    pm2 start "$branch"
 
     sleep 5
 
-    echo "Started :)"
+else 
+    echo "Branch $branch not found!"
+    exit 1
 fi
