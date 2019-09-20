@@ -32,7 +32,7 @@ app.post("/", function (req, res) {
 
         if (repo === "Hermes") {
             execFileSync("./hook.sh", [branch])
-            sendMessage("[Webhook] `" + branch + "` branch updated to commit `" + commitID + "` - `" + commitMessage + "`")
+            sendMessage("[Webhook] `" + branch + "` branch updated to commit `#" + commitID + "` - `" + commitMessage + "`")
             console.log('Updated ' + branch + ' branch.')
         }
 
