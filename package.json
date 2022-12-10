@@ -4,7 +4,7 @@
   "description": "A JavaScript script that automatically updates the server when a commit is pushed.",
   "main": "github.js",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.3"
   },
   "devDependencies": {},
   "scripts": {
